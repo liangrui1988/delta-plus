@@ -4,7 +4,6 @@ import org.apache.spark.sql.SparkSession
 
 object InitMysqlToDelta {
   def main(args: Array[String]): Unit = {
-
     val spark = SparkSession.builder()
       .master("local[*]")
       //      .config("hive.metastore.uris", "thrift://10.200.102.187:9083")
@@ -22,6 +21,7 @@ object InitMysqlToDelta {
     )
     import org.apache.spark.sql.functions.col
     var df = spark.read.format("jdbc").options(mysqlConf).load()
+    //.filter(c=>c.equals("script_file"))
     df = df.repartitionByRange(2, col("id"))
     df.show()
     df.write
